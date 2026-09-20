@@ -11,7 +11,7 @@ a = Analysis(
         ('splash.png', '.'),
         ('banner_hero.png', '.')
     ],
-    hiddenimports=[],
+    hiddenimports=['bs4', 'openpyxl'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
