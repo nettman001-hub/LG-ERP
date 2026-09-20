@@ -499,7 +499,7 @@ class LGErpMainView(QWidget):
         btn_more = QPushButton("+ 더보기")
         btn_more.setObjectName("NoticeMoreBtn")
         btn_more.setCursor(QCursor(Qt.PointingHandCursor))
-        btn_more.clicked.connect(lambda: self._show_notice_detail("전국 물류 주소록 (26년 9/21일 기준)", "2026-09-21", "영업공지사항"))
+        btn_more.clicked.connect(lambda: self._show_notice_detail("전국 물류 주소록 (26년 8/18일 기준)", "2026-08-24", "영업공지사항"))
         tab_layout.addWidget(btn_more)
         layout.addLayout(tab_layout)
 
@@ -509,10 +509,10 @@ class LGErpMainView(QWidget):
         layout.addWidget(line)
 
         notices = [
-            ("일반", "전국 물류 주소록 (26년 9/21일 기준)", "2026-09-21", True),
-            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 무분수가 일부교체현장...", "2026-09-18", False),
-            ("일반", "[안내] - 고객협의없는 구세번제품시공 절대금지_고객 협의 증빙서류 수취 및 보관", "2026-09-15", False),
-            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 현장에서 제번 확인 필수", "2026-09-10", False),
+            ("일반", "전국 물류 주소록 (26년 8/18일 기준)", "2026-08-24", True),
+            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 무분수가 일부교체현장...", "2025-12-24", False),
+            ("일반", "[안내] - 고객협의없는 구세번제품시공 절대금지_고객 협의 증빙서류 수취 및 보관", "2025-11-20", False),
+            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 현장에서 제번 확인 필수", "2025-11-03", False),
         ]
 
         for category, title, date, is_highlight in notices:
@@ -557,7 +557,7 @@ class LGErpMainView(QWidget):
         btn_more = QPushButton("+ 더보기")
         btn_more.setObjectName("NoticeMoreBtn")
         btn_more.setCursor(QCursor(Qt.PointingHandCursor))
-        btn_more.clicked.connect(lambda: self._show_notice_detail("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-09-21)", "2026-09-21", "전산공지사항"))
+        btn_more.clicked.connect(lambda: self._show_notice_detail("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-08-25)", "2026-08-25", "전산공지사항"))
         tab_layout.addWidget(btn_more)
         layout.addLayout(tab_layout)
 
@@ -567,10 +567,10 @@ class LGErpMainView(QWidget):
         layout.addWidget(line)
 
         notices = [
-            ("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-09-21)", "2026-09-21", True),
-            ("[New BEST] LGE 주문 조회 화면 변경사항 안내(2026-09-19)", "2026-09-19", False),
-            ("[New BEST] 알림 기능 파일럿 운영 - 신고확인서 알림", "2026-09-15", False),
-            ("[안내] New BEST 세션타임아웃 시간 변경 건", "2026-09-10", False),
+            ("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-08-25)", "2026-08-25", True),
+            ("[New BEST] LGE 주문 조회 화면 변경사항 안내(2026-08-19)", "2026-08-19", False),
+            ("[New BEST] 알림 기능 파일럿 운영 - 신고확인서 알림", "2026-08-05", False),
+            ("[안내] New BEST 세션타임아웃 시간 변경 건", "2026-08-03", False),
         ]
 
         for title, date, is_highlight in notices:
