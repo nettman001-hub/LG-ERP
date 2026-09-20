@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# PyInstaller / Build outputs
+build/
+dist/
+excel/build/
+excel/dist/
+*.pkg
+*.exe
+
+# .NET build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Large archives and backups
+*.zip
+*.tar.gz
+*.7z
+
+# Local configs and IDEs
+.claude/
+.idea/
+.vscode/
+local.properties
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Android Gradle
+.gradle/
+.kotlin/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporary / Log files
+*.log
