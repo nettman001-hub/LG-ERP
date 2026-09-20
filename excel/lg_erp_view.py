@@ -74,14 +74,14 @@ class BestSecretaryDialog(QDialog):
             }
         """)
         briefing_text = (
-            "안녕하세요, <b>정확현님!</b> 오늘 영업 현황 브리핑입니다. ☀️\n\n"
-            "📊 <b>오늘의 주요 지표 요약</b>\n"
+            "안녕하세요, <b>정확현님!</b> 오늘(<b>2026년 9월 21일</b>) 영업 현황 브리핑입니다. ☀️\n\n"
+            "📊 <b>오늘의 주요 지표 요약 (2026.09.21 기준)</b>\n"
             "• 신규 접수 주문: 총 12건 (수도권 8건, 지방 4건)\n"
             "• 당일 배송 예정: 5건 (설치 기사 배정 완료)\n"
             "• 약속일 변경 요청: 2건 (고객 협의 필요)\n\n"
             "⚠️ <b>긴급 재고 및 가격 알림</b>\n"
             "• <i>OLED65C4QNA</i> 평택 중앙물류 재고 15대 미만으로 안전재고 도달\n"
-            "• 4월 에어컨 기획전 공급가 조정 검토 요망\n\n"
+            "• 9월 가을 기획전 공급가 조정 검토 요망\n\n"
             "💡 <b>추천 작업</b>\n"
             "상단 <b>[✨ AI서비스 (엑셀 가격표)]</b> 버튼을 눌러 최신 할인율을 검토하고 다나와 최저가와 비교해 보세요!"
         )
@@ -499,7 +499,7 @@ class LGErpMainView(QWidget):
         btn_more = QPushButton("+ 더보기")
         btn_more.setObjectName("NoticeMoreBtn")
         btn_more.setCursor(QCursor(Qt.PointingHandCursor))
-        btn_more.clicked.connect(lambda: self._show_notice_detail("전국 물류 주소록 (26년 8/18일 기준)", "2026-08-24", "영업공지사항"))
+        btn_more.clicked.connect(lambda: self._show_notice_detail("전국 물류 주소록 (26년 9/21일 기준)", "2026-09-21", "영업공지사항"))
         tab_layout.addWidget(btn_more)
         layout.addLayout(tab_layout)
 
@@ -509,10 +509,10 @@ class LGErpMainView(QWidget):
         layout.addWidget(line)
 
         notices = [
-            ("일반", "전국 물류 주소록 (26년 8/18일 기준)", "2026-08-24", True),
-            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 무분수가 일부교체현장...", "2025-12-24", False),
-            ("일반", "[안내] - 고객협의없는 구세번제품시공 절대금지_고객 협의 증빙서류 수취 및 보관", "2025-11-20", False),
-            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 현장에서 제번 확인 필수", "2025-11-03", False),
+            ("일반", "전국 물류 주소록 (26년 9/21일 기준)", "2026-09-21", True),
+            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 무분수가 일부교체현장...", "2026-09-18", False),
+            ("일반", "[안내] - 고객협의없는 구세번제품시공 절대금지_고객 협의 증빙서류 수취 및 보관", "2026-09-15", False),
+            ("일반", "[추가안내] 고객 협의 없는 구제번 제품 시공 절대금지 - 현장에서 제번 확인 필수", "2026-09-10", False),
         ]
 
         for category, title, date, is_highlight in notices:
@@ -557,7 +557,7 @@ class LGErpMainView(QWidget):
         btn_more = QPushButton("+ 더보기")
         btn_more.setObjectName("NoticeMoreBtn")
         btn_more.setCursor(QCursor(Qt.PointingHandCursor))
-        btn_more.clicked.connect(lambda: self._show_notice_detail("[New BEST] 출하보류 해지요청 메일발송 기능 반영", "2026-08-25", "전산공지사항"))
+        btn_more.clicked.connect(lambda: self._show_notice_detail("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-09-21)", "2026-09-21", "전산공지사항"))
         tab_layout.addWidget(btn_more)
         layout.addLayout(tab_layout)
 
@@ -567,10 +567,10 @@ class LGErpMainView(QWidget):
         layout.addWidget(line)
 
         notices = [
-            ("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-08-25)", "2026-08-25", True),
-            ("[New BEST] LGE 주문 조회 화면 변경사항 안내(2026-08-19)", "2026-08-19", False),
-            ("[New BEST] 알림 기능 파일럿 운영 - 신고확인서 알림", "2026-08-05", False),
-            ("[안내] New BEST 세션타임아웃 시간 변경 건", "2026-08-03", False),
+            ("[New BEST] 출하보류 해지요청 메일발송 기능 반영 (2026-09-21)", "2026-09-21", True),
+            ("[New BEST] LGE 주문 조회 화면 변경사항 안내(2026-09-19)", "2026-09-19", False),
+            ("[New BEST] 알림 기능 파일럿 운영 - 신고확인서 알림", "2026-09-15", False),
+            ("[안내] New BEST 세션타임아웃 시간 변경 건", "2026-09-10", False),
         ]
 
         for title, date, is_highlight in notices:
@@ -670,10 +670,10 @@ class LGErpMainView(QWidget):
         table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         deliveries = [
-            ("DL-20260401-01", "김*수 고객님", "서울시 강남구 역삼로 123", "OLED65C4QNA", "이철수 기사", "2026-04-01 14:00", "이동중"),
-            ("DL-20260401-02", "박*영 고객님", "경기도 성남시 분당구 정자일로 45", "F21WDNP 외 1건", "정민호 기사", "2026-04-01 16:30", "배정완료"),
-            ("DL-20260401-03", "최*준 고객님", "인천시 연수구 송도과학로 88", "M874MWW451", "강현우 기사", "2026-04-02 10:00", "배정완료"),
-            ("DL-20260401-04", "이*진 고객님", "서울시 송파구 올림픽로 300", "FQ18EN9B02", "김태성 기사", "2026-04-02 13:00", "대기중"),
+            ("DL-20260921-01", "김*수 고객님", "서울시 강남구 역삼로 123", "OLED65C4QNA", "이철수 기사", "2026-09-21 14:00", "이동중"),
+            ("DL-20260921-02", "박*영 고객님", "경기도 성남시 분당구 정자일로 45", "F21WDNP 외 1건", "정민호 기사", "2026-09-21 16:30", "배정완료"),
+            ("DL-20260921-03", "최*준 고객님", "인천시 연수구 송도과학로 88", "M874MWW451", "강현우 기사", "2026-09-22 10:00", "배정완료"),
+            ("DL-20260921-04", "이*진 고객님", "서울시 송파구 올림픽로 300", "FQ18EN9B02", "김태성 기사", "2026-09-22 13:00", "대기중"),
         ]
 
         table.setRowCount(len(deliveries))
@@ -704,10 +704,10 @@ class LGErpMainView(QWidget):
         table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         orders = [
-            ("2026-03-31", "PO-2603-0891", "LG전자 본사 물류", "OLED65C4QNA", "30대", "평택중앙물류", "입고완료"),
-            ("2026-03-31", "PO-2603-0892", "LG전자 창원1공장", "F21WDNP", "20대", "곤지암물류", "배송중"),
-            ("2026-03-30", "PO-2603-0885", "LG전자 본사 물류", "M874MWW451", "15대", "평택중앙물류", "승인완료"),
-            ("2026-03-28", "RT-2603-0012", "다온솔루션 물류", "AU9982GD (환입)", "2대", "불량검수센터", "환입완료"),
+            ("2026-09-21", "PO-2609-0921", "LG전자 본사 물류", "OLED65C4QNA", "30대", "평택중앙물류", "입고완료"),
+            ("2026-09-21", "PO-2609-0922", "LG전자 창원1공장", "F21WDNP", "20대", "곤지암물류", "배송중"),
+            ("2026-09-20", "PO-2609-0885", "LG전자 본사 물류", "M874MWW451", "15대", "평택중앙물류", "승인완료"),
+            ("2026-09-19", "RT-2609-0012", "다온솔루션 물류", "AU9982GD (환입)", "2대", "불량검수센터", "환입완료"),
         ]
 
         table.setRowCount(len(orders))
@@ -792,10 +792,10 @@ class LGErpMainView(QWidget):
         table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         sales = [
-            ("ORD-260401-001", "2026-04-01 09:15", "홍*동", "₩2,850,000", "직접설치배송", "LG-LOGIS-9912", "배송출발"),
-            ("ORD-260401-002", "2026-04-01 09:42", "이*영", "₩1,280,000", "전문설치", "LG-LOGIS-9913", "기사배정"),
-            ("ORD-260401-003", "2026-04-01 10:05", "송*재", "₩3,420,000", "전문설치", "LG-LOGIS-9914", "물류상차"),
-            ("ORD-260401-004", "2026-04-01 10:30", "윤*희", "₩890,000", "택배배송", "CJ-대한통운-4412", "접수완료"),
+            ("ORD-260921-001", "2026-09-21 09:15", "홍*동", "₩2,850,000", "직접설치배송", "LG-LOGIS-9912", "배송출발"),
+            ("ORD-260921-002", "2026-09-21 09:42", "이*영", "₩1,280,000", "전문설치", "LG-LOGIS-9913", "기사배정"),
+            ("ORD-260921-003", "2026-09-21 10:05", "송*재", "₩3,420,000", "전문설치", "LG-LOGIS-9914", "물류상차"),
+            ("ORD-260921-004", "2026-09-21 10:30", "윤*희", "₩890,000", "택배배송", "CJ-대한통운-4412", "접수완료"),
         ]
 
         table.setRowCount(len(sales))
@@ -826,9 +826,9 @@ class LGErpMainView(QWidget):
         table.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
         settlements = [
-            ("2026년 03월", "B2C 가이드 가전정산", "₩184,500,000", "₩18,450,000", "₩12,300,000", "정산마감(완료)"),
-            ("2026년 02월", "B2C 가이드 가전정산", "₩162,100,000", "₩16,210,000", "₩10,800,000", "정산마감(완료)"),
-            ("2026년 01월", "B2C 가이드 가전정산", "₩195,400,000", "₩19,540,000", "₩14,200,000", "정산마감(완료)"),
+            ("2026년 08월", "B2C 가이드 가전정산", "₩184,500,000", "₩18,450,000", "₩12,300,000", "정산마감(완료)"),
+            ("2026년 07월", "B2C 가이드 가전정산", "₩162,100,000", "₩16,210,000", "₩10,800,000", "정산마감(완료)"),
+            ("2026년 06월", "B2C 가이드 가전정산", "₩195,400,000", "₩19,540,000", "₩14,200,000", "정산마감(완료)"),
         ]
 
         table.setRowCount(len(settlements))
@@ -852,7 +852,7 @@ class LGErpMainView(QWidget):
         header = self._create_page_header("홈 > 영업지원 > 오늘 꼭 해야 할 일", "💼 영업 오늘 꼭 해야 할 일 세부 처리")
         self.todo_page_layout.addLayout(header)
 
-        self.lbl_todo_category = QLabel("전체 업무 내역")
+        self.lbl_todo_category = QLabel("전체 업무 내역 (2026년 9월 21일 기준)")
         self.lbl_todo_category.setStyleSheet("font-size: 14px; font-weight: bold; color: #1e293b;")
         self.todo_page_layout.addWidget(self.lbl_todo_category)
 
@@ -867,17 +867,17 @@ class LGErpMainView(QWidget):
         return widget
 
     def _show_todo_detail(self, category: str):
-        self.lbl_todo_category.setText(f"선택 분류: {category}")
+        self.lbl_todo_category.setText(f"선택 분류: {category} (2026년 9월 21일 기준)")
         self._populate_todo_table(category)
         self.switch_page(7, f"https://newbest.lge.com/b2b/NEWBEST/task/todayTodoList.do?cat={category}")
 
     def _populate_todo_table(self, filter_cat: str):
         all_todos = [
-            ("약속일 변경건", "ORD-260328-04 김*수", "OLED65C4QNA", "고객 요청으로 4/3일에서 4/5일로 배송일정 연기 협의 완료", "협의완료"),
-            ("약속일 변경건", "ORD-260329-11 박*영", "M874MWW451", "인테리어 공사 지연으로 설치일 미정 통보 -> 확인 전화 필요", "확인필요"),
-            ("당일 배송 예정건", "ORD-260401-01 이*철", "F21WDNP", "오전 11시 기사 상차 완료, 오후 2시 설치 예정", "배송중"),
-            ("당일 배송 예정건", "ORD-260401-02 최*준", "FQ18EN9B02", "오후 4시 서울 송파구 직배송 예정", "상차대기"),
-            ("당일 배송 예정건", "ORD-260401-05 윤*희", "AU9982GD", "오후 5시 30분 안산 단원구 배송 예정", "배정완료"),
+            ("약속일 변경건", "ORD-260920-04 김*수", "OLED65C4QNA", "고객 요청으로 9/23일에서 9/25일로 배송일정 연기 협의 완료", "협의완료"),
+            ("약속일 변경건", "ORD-260920-11 박*영", "M874MWW451", "인테리어 공사 지연으로 설치일 미정 통보 -> 확인 전화 필요", "확인필요"),
+            ("당일 배송 예정건", "ORD-260921-01 이*철", "F21WDNP", "오전 11시 기사 상차 완료, 오후 2시 설치 예정", "배송중"),
+            ("당일 배송 예정건", "ORD-260921-02 최*준", "FQ18EN9B02", "오후 4시 서울 송파구 직배송 예정", "상차대기"),
+            ("당일 배송 예정건", "ORD-260921-05 윤*희", "AU9982GD", "오후 5시 30분 안산 단원구 배송 예정", "배정완료"),
             ("자동 적자 예상건", "기획전 특가 모델", "S5MBP (스타일러)", "다나와 최저가 하락으로 공급가 마진 역전 위험 -> 할인율 재조정 필요", "조정요망"),
         ]
 
@@ -911,7 +911,7 @@ class LGErpMainView(QWidget):
         c_layout.addWidget(self.lbl_notice_title)
 
         meta_layout = QHBoxLayout()
-        self.lbl_notice_meta = QLabel("작성자: 영업지원팀 | 등록일: 2026-08-24 | 조회수: 1,428")
+        self.lbl_notice_meta = QLabel("작성자: 영업지원팀 | 등록일: 2026-09-21 | 조회수: 1,428")
         self.lbl_notice_meta.setStyleSheet("font-size: 12px; color: #64748b;")
         meta_layout.addWidget(self.lbl_notice_meta)
         meta_layout.addStretch()
