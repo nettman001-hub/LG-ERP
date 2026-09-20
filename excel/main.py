@@ -37,6 +37,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget,
     QAbstractItemView,
+    QStackedWidget,
 )
 
 from openpyxl import load_workbook
@@ -58,6 +59,7 @@ from erp_client import (
 )
 from inventory_queue import DEFAULT_INVENTORY_BRIDGE_BASE_URL, InventoryQueueController
 from otp_bridge_client import OTPBridgeClient
+from lg_erp_view import LGErpMainView
 
 DEFAULT_OTP_BRIDGE_URL = "http://unione24.co.kr/otp"
 APP_STATE_DIRNAME = ".price_table_editor"
@@ -674,28 +676,65 @@ class RelatedModelsDialog(QDialog):
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("엑셀 가격표 할인율 조정기")
-        self.resize(980, 640)
+        self.setWindowTitle("NEWBEST - LG Electronics ERP")
+        self.resize(1024, 680)
 
         self.loaded: Optional[LoadedWorkbook] = None
         self.table_deltas_pp: Dict[int, float] = {}
         self._last_temp_path: Optional[str] = None
         self.session_opened_at: Optional[str] = None
         self.last_batch_delta_pp: Optional[float] = None
-        # (table_index, row_index) -> ?먮옒 怨듦툒媛
+        # (table_index, row_index) -> 원래 공급가
         self.original_supply: Dict[Tuple[int, int], float] = {}
         
-        # ERP ?몄뀡 諛??대씪?댁뼵???몄뒪?댁뒪
+        # ERP 세션 및 클라이언트 인스턴스
         self.erp_session = ERPSession()
         self.erp_client = ERPClient(self.erp_session)
         self.inventory_queue = InventoryQueueController()
 
-        root = QWidget()
-        self.setCentralWidget(root)
+        # 화면 전환용 QStackedWidget
+        self.stacked_widget = QStackedWidget()
+        self.setCentralWidget(self.stacked_widget)
 
-        layout = QVBoxLayout(root)
+        # 1. LG ERP 메인 화면 클론 뷰 (Index 0)
+        self.erp_main_view = LGErpMainView(self)
+        self.erp_main_view.ai_service_clicked.connect(self.show_price_editor)
+        self.erp_main_view.search_model_requested.connect(self._on_main_search_model)
+        self.stacked_widget.addWidget(self.erp_main_view)
 
-        # ?곷떒: ?뚯씪 濡쒕뱶
+        # 2. 엑셀 가격표 할인율 조정기 뷰 (Index 1)
+        self.price_editor_widget = QWidget()
+        layout = QVBoxLayout(self.price_editor_widget)
+
+        # 상단 네비게이션 헤더 (ERP 메인 복귀 버튼)
+        nav_bar = QHBoxLayout()
+        self.btn_back_to_main = QPushButton("◀ 🏠 LG ERP 메인 화면으로")
+        self.btn_back_to_main.setCursor(Qt.PointingHandCursor)
+        self.btn_back_to_main.setStyleSheet("""
+            QPushButton {
+                background-color: #212636;
+                color: #ffffff;
+                font-weight: bold;
+                font-size: 12px;
+                padding: 6px 16px;
+                border: 1px solid #373c4f;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #32384a;
+                border-color: #e6004c;
+            }
+        """)
+        self.btn_back_to_main.clicked.connect(self.show_erp_main)
+        nav_bar.addWidget(self.btn_back_to_main)
+
+        lbl_editor_title = QLabel("✨ AI서비스 : 엑셀 가격표 할인율 조정기")
+        lbl_editor_title.setStyleSheet("font-size: 14px; font-weight: bold; color: #1f2937; margin-left: 10px;")
+        nav_bar.addWidget(lbl_editor_title)
+        nav_bar.addStretch()
+        layout.addLayout(nav_bar)
+
+        # 상단: 파일 로드
         file_bar = QHBoxLayout()
         self.btn_open = QPushButton("엑셀 파일 열기(.xlsx)")
         self.lbl_file = QLabel("파일을 선택해 주세요")
@@ -887,6 +926,22 @@ class MainWindow(QMainWindow):
 
         if "--auto-login" in sys.argv:
             QTimer.singleShot(500, self.on_erp_login)
+
+        self.stacked_widget.addWidget(self.price_editor_widget)
+        self.show_erp_main()
+
+    def show_erp_main(self) -> None:
+        self.stacked_widget.setCurrentIndex(0)
+        self.setWindowTitle("NEWBEST - LG Electronics ERP")
+
+    def show_price_editor(self) -> None:
+        self.stacked_widget.setCurrentIndex(1)
+        self.setWindowTitle("NEWBEST - AI서비스 (엑셀 가격표 할인율 조정기)")
+
+    def _on_main_search_model(self, model_name: str) -> None:
+        self.show_price_editor()
+        self.txt_manual_model.setText(model_name)
+        self.on_manual_inventory_search()
 
     def _set_enabled(self, enabled: bool) -> None:
         self.list_tables.setEnabled(enabled)
