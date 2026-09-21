@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>삼성 ERP 자동 로그인 및 시스템 연동 방안 제안서</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0B1120;
+      --bg-card: #131E36;
+      --bg-card-hover: #1A2849;
+      --bg-sub: #0F172A;
+      --border-color: #1E293B;
+      --border-accent: #38BDF8;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --primary: #38BDF8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent-purple: #A855F7;
+      --accent-green: #10B981;
+      --accent-amber: #F59E0B;
+      --accent-red: #EF4444;
+      --code-bg: #030712;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.65;
+      padding: 32px 20px 80px;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      margin-bottom: 36px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+
+    .badge-wrap {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-cyan {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38BDF8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .badge-purple {
+      background: rgba(168, 85, 247, 0.12);
+      color: #C084FC;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .badge-green {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+    }
+
+    /* Visual Banner Container */
+    .hero-banner-card {
+      background: var(--bg-card);
+      border: 1px solid #233354;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 30px var(--primary-glow);
+    }
+
+    .hero-banner-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-bottom: 1px solid #1E293B;
+    }
+
+    .banner-footer {
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: linear-gradient(180deg, rgba(19, 30, 54, 0.6) 0%, rgba(11, 17, 32, 0.9) 100%);
+    }
+
+    .banner-caption {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .banner-caption strong {
+      color: #38BDF8;
+    }
+
+    .banner-metrics {
+      display: flex;
+      gap: 20px;
+    }
+
+    .metric-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .metric-pill .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .metric-pill .val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #F1F5F9;
+    }
+
+    /* Executive Summary Grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .summary-card:hover {
+      transform: translateY(-3px);
+      border-color: #38BDF8;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .card-cyan::before { background: var(--primary); }
+    .card-purple::before { background: var(--accent-purple); }
+    .card-green::before { background: var(--accent-green); }
+    .card-amber::before { background: var(--accent-amber); }
+
+    .summary-card .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+    }
+
+    .summary-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+
+    .summary-card p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* Section Styles */
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span.number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38BDF8;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    /* Architecture Flow Box */
+    .flow-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .flow-step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      position: relative;
+    }
+
+    .flow-node {
+      background: var(--bg-sub);
+      border: 1px solid #283756;
+      border-radius: 12px;
+      padding: 16px;
+      position: relative;
+    }
+
+    .flow-node .step-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #38BDF8;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .flow-node h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #F8FAFC;
+      margin-bottom: 6px;
+    }
+
+    .flow-node p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* Comparison Table */
+    .table-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 18px 20px;
+      border-bottom: 1px solid #1E293B;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    td strong {
+      color: #FFFFFF;
+    }
+
+    .badge-recommend {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34D399;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    .badge-fallback {
+      background: rgba(245, 158, 11, 0.2);
+      color: #FBBF24;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    /* Checklist Cards */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .check-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      gap: 14px;
+    }
+
+    .check-box-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38BDF8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+      font-size: 0.85rem;
+    }
+
+    .check-content h4 {
+      font-size: 0.95rem;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .check-content p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* Roadmap Timeline */
+    .roadmap-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .roadmap-row {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .road-step {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #38BDF8;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      white-space: nowrap;
+    }
+
+    .road-info {
+      flex: 1;
+    }
+
+    .road-info h4 {
+      font-size: 1rem;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+    }
+
+    .road-info p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      margin-top: 60px;
+      padding-top: 24px;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      body { padding: 18px 12px; }
+      h1 { font-size: 1.7rem; }
+      .banner-footer { flex-direction: column; align-items: flex-start; }
+      .metric-pill { align-items: flex-start; }
+      .roadmap-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="badge-wrap">
+        <span class="badge badge-cyan">Architecture Proposal</span>
+        <span class="badge badge-purple">Enterprise ERP Automation</span>
+        <span class="badge badge-green">Direct HTTP & OTP Webhook</span>
+      </div>
+      <h1>삼성 ERP 자동 로그인 및 시스템 연동 방안</h1>
+      <p class="subtitle">LG ERP의 검증된 백그라운드 직접 통신 아키텍처를 삼성 시스템으로 확장하기 위한 기술 청사진</p>
+    </header>
+
+    <!-- Visual Architecture Banner Card -->
+    <div class="hero-banner-card">
+      <img src="assets/samsung_erp_overview.jpg" alt="Enterprise ERP Software Integration Overview Diagram" />
+      <div class="banner-footer">
+        <div class="banner-caption">
+          <strong>시스템 아키텍처 다이어그램:</strong> 좌측(LG ERP 현행 무브라우저 HTTP 직접 세션 & SMS Webhook) vs 우측(삼성 ERP 직접 API 연동 및 브라우저 대체 경로)
+        </div>
+        <div class="banner-metrics">
+          <div class="metric-pill">
+            <span class="label">LG ERP 통신 방식</span>
+            <span class="val">100% 순수 HTTP (requests)</span>
+          </div>
+          <div class="metric-pill">
+            <span class="label">2차 인증 수단</span>
+            <span class="val">Android SMS Webhook 자동화</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Executive Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card card-cyan">
+        <div class="card-icon">⚡</div>
+        <h3>100% 무브라우저 직접 통신</h3>
+        <p>현행 LG ERP와 마찬가지로 백그라운드에서 <code>requests.Session</code>으로 초고속 패킷 직렬화 통신을 1순위로 추진합니다.</p>
+      </div>
+      <div class="summary-card card-purple">
+        <div class="card-icon">📱</div>
+        <h3>기존 SMS Webhook 인프라 재활용</h3>
+        <p>스마트폰의 <code>SmsWebhook</code> 앱과 사내 중계 서버를 그대로 활용하여 삼성 문자 인증번호도 무인 자동 입력합니다.</p>
+      </div>
+      <div class="summary-card card-green">
+        <div class="card-icon">🧩</div>
+        <h3>다중 ERP 모듈화 설계</h3>
+        <p>기존 코드를 건드리지 않고 <code>BaseERPClient</code> 인터페이스 하위에 <code>SamsungErpClient</code>를 독립 추가하여 완벽 격리합니다.</p>
+      </div>
+      <div class="summary-card card-amber">
+        <div class="card-icon">🛡️</div>
+        <h3>보안 프로그램 대비 듀얼 전략</h3>
+        <p>TouchEn, AnySign 등 보안 모듈 강제 시 즉시 무중단 전환 가능한 브라우저 제어(Playwright) 폴백 전략을 함께 수립합니다.</p>
+      </div>
+    </div>
+
+    <!-- Section 1: 기존 LG ERP 연동 파이프라인 분석 -->
+    <section>
+      <div class="section-title">
+        <span class="number">1</span>
+        현행 LG ERP 자동화 시스템의 작동 메커니즘
+      </div>
+      
+      <div class="flow-container">
+        <div class="flow-step-grid">
+          <div class="flow-node">
+            <span class="step-tag">Step 01</span>
+            <h4>세션 초기화</h4>
+            <p><code>index.do</code> 및 <code>preLogin.do</code> 호출로 기본 쿠키 발급 및 아이디/비번 1차 검증</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 02</span>
+            <h4>SMS 발송 트리거</h4>
+            <p><code>smsSend.do</code> 호출로 등록된 사용자 모바일 번호로 6자리 OTP 발송</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 03</span>
+            <h4>모바일 문자 가로채기</h4>
+            <p>스마트폰 Android <code>NotificationListenerService</code>가 SMS 수신 감지</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 04</span>
+            <h4>브리지 서버 중계</h4>
+            <p>스마트폰 앱이 사내 웹 서버(<code>unione24.co.kr</code>)로 OTP를 HTTP POST 전송</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 05</span>
+            <h4>PC 실시간 폴링</h4>
+            <p><code>otp_bridge_client.py</code>가 2초 간격으로 중계 서버를 폴링하여 OTP 자동 수신</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 06</span>
+            <h4>포털 최종 로그인</h4>
+            <p>수신된 OTP와 세션 토큰을 <code>login.do</code>에 제출하여 포털 인증 완료</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 07</span>
+            <h4>ERP 내부 연동</h4>
+            <p>Nexacro SSV 바이너리/구분자(<code>\x1E</code>, <code>\x1F</code>) 패킷으로 B2B ERP 세션 획득</p>
+          </div>
+          <div class="flow-node">
+            <span class="step-tag">Step 08</span>
+            <h4>Keep-Alive 유지</h4>
+            <p>주기적 하트비트 요청으로 장기 세션 유지 및 재고/생산계획 조회</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: 기술 전략 비교 -->
+    <section>
+      <div class="section-title">
+        <span class="number">2</span>
+        삼성 ERP 연동 2대 기술 전략 비교
+      </div>
+
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 22%;">항목</th>
+              <th style="width: 39%;">방안 A: 순수 HTTP 직접 통신 <span class="badge-recommend">추천 (LG 동일 방식)</span></th>
+              <th style="width: 39%;">방안 B: 브라우저 자동화 <span class="badge-fallback">보안 모듈 대응 폴백</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>동작 메커니즘</strong></td>
+              <td>F12 / 프록시로 패킷 분석 후 Python <code>requests.Session</code>으로 백그라운드 직접 호출</td>
+              <td>Playwright / Selenium을 이용해 가상 브라우저에서 실제 마우스/키보드 입력 자동화</td>
+            </tr>
+            <tr>
+              <td><strong>실행 속도 & 리소스</strong></td>
+              <td><strong>초고속 (0.5초 이내 완료)</strong>, 백그라운드 메모리 점유 거의 없음</td>
+              <td>브라우저 인스턴스 기동 시간 필요 (2~4초 소요), 일정 메모리 점유</td>
+            </tr>
+            <tr>
+              <td><strong>보안 모듈 대응력</strong></td>
+              <td>AnySign, TouchEn 등 키보드 보안 프로그램 강제 시 패킷 암호화 우회 난이도 극상</td>
+              <td><strong>실제 브라우저 환경</strong>이므로 보안 프로그램 및 복잡한 JS 암호화를 자연스럽게 통과</td>
+            </tr>
+            <tr>
+              <td><strong>스펙 변경 민감도</strong></td>
+              <td>서버 내부 파라미터나 암호화 알고리즘 변경 시 패킷 재분석 필요</td>
+              <td>웹 페이지의 HTML UI 구조/버튼 ID 변경 시 선택자(Selector) 수정 필요</td>
+            </tr>
+            <tr>
+              <td><strong>적용 기준</strong></td>
+              <td><strong>삼성 ERP 사이트에 보안 프로그램이 없는 일반 웹/API인 경우 (최우선)</strong></td>
+              <td><strong>보안 프로그램 설치가 필수이고 암호화가 복잡하게 얽힌 경우</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 3: 사전 조사 체크리스트 -->
+    <section>
+      <div class="section-title">
+        <span class="number">3</span>
+        삼성 사이트 사전 조사 체크리스트 (착수 전 필수 확인)
+      </div>
+
+      <div class="checklist-grid">
+        <div class="check-item">
+          <div class="check-box-icon">1</div>
+          <div class="check-content">
+            <h4>정확한 접속 도메인 및 사이트 유형</h4>
+            <p>SEC B2B, e-Partner, S-NET, G-ERP 중 실제 영업용 시스템 URL 및 로그인 페이지 엔드포인트 파악</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-box-icon">2</div>
+          <div class="check-content">
+            <h4>보안 프로그램 설치 필수 여부</h4>
+            <p>접속 시 키보드 보안(TouchEn nxKey) 또는 위변조 방지 프로그램 강제 여부 (전략 A vs B 결정 기준)</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-box-icon">3</div>
+          <div class="check-content">
+            <h4>비밀번호 암호화 전송 방식</h4>
+            <p>평문 전송인지, 아니면 RSA 공개키/JS 암호화(CryptoJS, SEED 등)를 거쳐 클라이언트 암호화되는지 확인</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-box-icon">4</div>
+          <div class="check-content">
+            <h4>2차 인증(MFA) 유형 식별</h4>
+            <p>SMS 문자 인증인지, 모바일 OTP 앱(Knox OTP, Google OTP), PASS 푸시 승인, 카카오 알림톡인지 확인</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: 다중 ERP 소프트웨어 아키텍처 -->
+    <section>
+      <div class="section-title">
+        <span class="number">4</span>
+        소프트웨어 모듈화 및 확장 설계
+      </div>
+
+      <div class="flow-container">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="background: #1E293B; border-radius: 10px; padding: 16px; border-left: 4px solid #38BDF8;">
+            <h4 style="color: #38BDF8; margin-bottom: 6px;">1. BaseERPClient (추상 인터페이스 정의)</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">모든 ERP 연동 모듈이 공통으로 구현해야 할 규격: <code>login()</code>, <code>logout()</code>, <code>is_session_valid()</code>, <code>check_inventory()</code>, <code>keep_alive()</code></p>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: #131E36; border-radius: 10px; padding: 16px; border: 1px solid #233354;">
+              <h4 style="color: #F8FAFC; margin-bottom: 6px;">LgErpClient (기존 모듈 보존)</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">기존 <code>erp_client.py</code>의 Nexacro SSV 통신 및 LG BEST 시스템 전용 인증 로직 그대로 격리 유지</p>
+            </div>
+            <div style="background: #131E36; border-radius: 10px; padding: 16px; border: 1px solid #38BDF8;">
+              <h4 style="color: #38BDF8; margin-bottom: 6px;">SamsungErpClient (신규 모듈 추가)</h4>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">삼성 전용 로그인 핸들러, 세션 쿠키 관리, 삼성 데이터 포맷(REST JSON 등) 매핑 어댑터 구현</p>
+            </div>
+          </div>
+          <div style="background: #1E293B; border-radius: 10px; padding: 16px; border-left: 4px solid #10B981;">
+            <h4 style="color: #34D399; margin-bottom: 6px;">2. PySide6 GUI 및 비즈니스 큐 통합 (`main.py`, `inventory_queue.py`)</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">상단 UI에 [LG ERP] / [삼성 ERP] 탭 및 계정 관리 토글을 추가하여 동시 세션 유지 및 카카오 챗봇 큐에서도 공급사별 자동 분기 처리</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: 단계별 추진 로드맵 -->
+    <section>
+      <div class="section-title">
+        <span class="number">5</span>
+        단계별 실행 로드맵
+      </div>
+
+      <div class="roadmap-list">
+        <div class="roadmap-row">
+          <div class="road-step">Phase 1</div>
+          <div class="road-info">
+            <h4>사이트 트래픽 분석 (Reconnaissance)</h4>
+            <p>삼성 ERP 실제 수동 로그인 진행 및 브라우저 개발자 도구(F12) Network 탭 전체 HTTP 트래픽 기록</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="road-step">Phase 2</div>
+          <div class="road-info">
+            <h4>통신 전략 확정 및 인증 프로토콜 규격화</h4>
+            <p>보안 프로그램 유무에 따라 직접 통신(방안 A) 또는 브라우저 제어(방안 B) 확정 후 엔드포인트 파라미터 정리</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="road-step">Phase 3</div>
+          <div class="road-info">
+            <h4>2차 인증(OTP) 파이프라인 연계</h4>
+            <p>SMS인 경우 기존 Android SmsWebhook 정규식 추가 분기, TOTP인 경우 PC 자동 생성기 연동</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="road-step">Phase 4</div>
+          <div class="road-info">
+            <h4>SamsungErpClient 모듈 개발 및 단위 검증</h4>
+            <p>Python 독립 스크립트로 로그인 성공 및 재고 단건 조회 성공 여부 검증</p>
+          </div>
+        </div>
+        <div class="roadmap-row">
+          <div class="road-step">Phase 5</div>
+          <div class="road-info">
+            <h4>GUI 및 카카오 챗봇 큐 통합</h4>
+            <p>PySide6 메인 윈도우 UI 탭 연결 및 통합 배포</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      LG-ERP System Architecture & Expansion Plan &bull; Generated for UniONE Automation Engineering
+    </footer>
+  </div>
+
+</body>
+</html>
